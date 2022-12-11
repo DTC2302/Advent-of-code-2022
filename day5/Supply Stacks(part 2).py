@@ -1,3 +1,6 @@
+import time
+start_time = time.time()
+
 with open('input.txt', 'r') as f:
     lines = f.readlines()
 numStacks = int(len(lines[0])/4)
@@ -23,3 +26,4 @@ out = ''
 for i in range(numStacks):
     out = out+stacks[i][0]
 print(out)
+print("Process finished --- %s seconds ---" % (time.time() - start_time))
