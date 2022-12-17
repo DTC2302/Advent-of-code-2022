@@ -3,6 +3,14 @@ def fall(start, grid):
     pos = (0, start)
     while 1:
         try:
+            if pos[1] == 0:
+                if not grid[pos[0]+1][pos[1]] == '.':
+                    if not grid[pos[0]+1][pos[1]+1] == '.':
+                        for i in range(len(grid)-1):
+                            grid[i].insert(0, '.')
+                        grid[-1].insert(0, '#')
+                        start+=1
+                        pos = (pos[0], pos[1]+1)
             if grid[pos[0]+1][pos[1]] == '.':
                 pos = (pos[0]+1, pos[1])
             elif grid[pos[0]+1][pos[1]-1] == '.':
@@ -12,9 +20,11 @@ def fall(start, grid):
             else:
                 break
         except IndexError:
-            return None
+            for i in range(len(grid)-1):
+                grid[i].append('.')
+            grid[-1].append('#')
     grid[pos[0]][pos[1]] = 'o'
-    return grid
+    return grid, start
         
 with open('input.txt', 'r') as f:
     lines = f.readlines()
@@ -49,18 +59,24 @@ for line in lines:
             else:
                 for j in range(start, end-1, -1):
                     area[vert][j] = '#'
+area.append(['.' for i in range(length)])
+area.append(['#' for i in range(length)])
 fallStart = 500-horzMin
 print(fallStart)
 area[0][fallStart] = '+'
 pieces = 0
-while area != None:
-    time.sleep(.1)
-    with open('output.txt', 'w') as f:
-        try:
-            
-            pieces+=1
-            area = fall(fallStart, area)
-            for i in area:
-                f.write(''.join(i) + '\n')
-        except:
-            print(pieces-1)
+while 1:
+    try:
+        pieces+=1
+        area, fallStart = fall(fallStart, area)
+    except:
+        print(pieces-1)
+    if (area[0][fallStart]=='o'):
+        break
+total = 0
+with open('output.txt', 'w') as f:
+    for i in area:
+        f.write(''.join(i) + '\n')
+for i in area:
+   total+=i.count('o')
+print(total)
