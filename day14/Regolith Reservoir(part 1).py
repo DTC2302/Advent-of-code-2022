@@ -57,7 +57,6 @@ while area != None:
     time.sleep(.1)
     with open('output.txt', 'w') as f:
         try:
-            
             pieces+=1
             area = fall(fallStart, area)
             for i in area:
