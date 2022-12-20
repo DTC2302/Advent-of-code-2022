@@ -8,57 +8,35 @@ for i in lines:
     bX = ''.join([x for x in i[-2] if x.isnumeric() or x == '-'])
     bY = ''.join([x for x in i[-1] if x.isnumeric() or x == '-'])
     sensorsAndBeacons.append([(int(sX), int(sY)), (int(bX), int(bY))])
-
-xS = []
-yS = []
-for i in sensorsAndBeacons:
-    xS.append(i[0][0])
-    xS.append(i[1][0])
-    yS.append(i[0][1])
-    yS.append(i[1][1])
-xOffset = abs(min(xS))
-sensorsAndBeacons = [[(i[0][0]+xOffset, i[0][1]),(i[1][0]+xOffset, i[1][1])] for i in sensorsAndBeacons]
+lineToCheck = 2000000
+for i in sensorsAndBeacons[::]:
+    dist = abs(i[0][0]-i[1][0]) + abs(i[0][1] - i[1][1])
+    if not(i[0][1]-dist<=lineToCheck-1 and i[0][1]+dist>=lineToCheck-1):
+        sensorsAndBeacons.remove(i)
 print('Input Parsed')
-grid = [['.' for i in range(max(xS) + xOffset+1)] for i in range(max(yS)+1)]
-print('empty grid made')
-for i in sensorsAndBeacons:
-    grid[i[0][1]][i[0][0]] = 'S'
-    grid[i[1][1]][i[1][0]] = 'B'
-print('Sensors and beacons installed')
+total = 0
+print(sensorsAndBeacons)
+taken = set()
 for i in sensorsAndBeacons:
     dist = abs(i[0][0]-i[1][0]) + abs(i[0][1] - i[1][1])
-    for j in range(dist+1):
-        for k in range(dist+1):
-            try:
-                if grid[i[0][1]+j][i[0][0]+k] == '.':
-                    grid[i[0][1]+j][i[0][0]+k] = '#'
-            except:
-                None
-            try:
-                if i[0][0]-k>=0:
-                    if grid[i[0][1]+j][i[0][0]-k] == '.':
-                        grid[i[0][1]+j][i[0][0]-k] = '#'
-            except:
-                None
-            try:
-                if i[0][1]-j>=0:
-                    if grid[i[0][1]-j][i[0][0]+k] == '.':
-                        grid[i[0][1]-j][i[0][0]+k] = '#'
-            except:
-                None
-            try:
-                if i[0][1]-j>=0 and i[0][0]-k>=0:
-                    if grid[i[0][1]-j][i[0][0]-k] == '.':
-                        grid[i[0][1]-j][i[0][0]-k] = '#'
-            except:
-                None
-        dist-=1
-print('# placed')
-with open('output.txt', 'w') as f:
-    for i in grid:
-        f.write(''.join(i)+'\n')
-total = 0
-for i in grid[2000001]:
-    if i == '#':
-        total+=1
-print(total)
+    if i[0][1]<lineToCheck:
+        dist-=(lineToCheck-i[0][1]-1)
+        for j in range(dist):
+            taken.add(i[0][0]+j)
+            taken.add(i[0][0]-j)
+    elif i[0][1]>lineToCheck:
+        dist-=(i[0][1]-lineToCheck-1)
+        for j in range(dist):
+            taken.add(i[0][0]+j)
+            taken.add(i[0][0]-j)
+    else:
+        for j in range(dist):
+            taken.add(i[0][0]+j)
+            taken.add(i[0][0]-j)
+beacons = set()
+for i in sensorsAndBeacons:
+    if i[1][1] == lineToCheck:
+        beacons.add(i[1][0])
+print(len(taken)-len(beacons))
+print(len(taken))
+print(len(beacons))
