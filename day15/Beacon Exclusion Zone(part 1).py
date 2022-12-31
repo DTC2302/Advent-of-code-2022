@@ -15,7 +15,6 @@ for i in sensorsAndBeacons[::]:
         sensorsAndBeacons.remove(i)
 print('Input Parsed')
 total = 0
-print(sensorsAndBeacons)
 taken = set()
 for i in sensorsAndBeacons:
     dist = abs(i[0][0]-i[1][0]) + abs(i[0][1] - i[1][1])
@@ -38,5 +37,3 @@ for i in sensorsAndBeacons:
     if i[1][1] == lineToCheck:
         beacons.add(i[1][0])
 print(len(taken)-len(beacons))
-print(len(taken))
-print(len(beacons))
