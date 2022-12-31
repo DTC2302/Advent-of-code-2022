@@ -1,9 +1,5 @@
-games = []
-while 1:
-    try:
-        games.append(input().split())
-    except EOFError:
-        break
+from inputHandling import *
+games = [i.split() for i in readlines()]
 score = 0
 for i in games:
     if i[1] == 'X':
