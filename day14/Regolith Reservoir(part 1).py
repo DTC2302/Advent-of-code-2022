@@ -55,11 +55,11 @@ area[0][fallStart] = '+'
 pieces = 0
 while area != None:
     time.sleep(.1)
-    with open('output.txt', 'w') as f:
-        try:
-            pieces+=1
-            area = fall(fallStart, area)
+    try:
+        pieces+=1
+        area = fall(fallStart, area)
+        with open('output.txt', 'w') as f:
             for i in area:
                 f.write(''.join(i) + '\n')
-        except:
-            print(pieces-1)
+    except:
+        print(pieces-1)
